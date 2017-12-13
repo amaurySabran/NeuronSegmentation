@@ -17,7 +17,7 @@ float lambda(Point3D p, Point3D q, Image3D grad3D, float alpha, float beta) {
     float gradp = grad3D.at(p);
     float gradq = grad3D.at(q);
     gradp = alpha / (1 + beta * gradp);
-    gradq = alpha / (1 + beta * gradq);
+    gradq = alpha / (1+ beta* gradq);
     return (gradp + gradq) / 2;
 }
 
