@@ -36,7 +36,7 @@ Graph<float, float, float> buildGraph(Image3D I, Image3D neuronConfidence, Image
 
                 //edges avec puit et source
 
-                g.add_tweights(pos, neuronConfidence.at(i, j, k), 1 - neuronConfidence.at(i, j, k));
+                g.add_tweights(pos, neuronConfidence.at(i, j, k), neuronConfidence.at(i, j, k));
 
                 if ((k < I.depth - 1)) {
                     float l = lambda(Point3D(i, j, k), Point3D(i, j, k + 1), grad3D, alpha, beta);

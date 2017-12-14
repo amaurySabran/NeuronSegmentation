@@ -34,11 +34,11 @@ Mat addOverlay(Mat underlay, Mat overlay, int heatmap) {
 }
 
 int main(int argc, char *argv[]) {
-    float alpha = 1.2;
-    float beta = 5;
-    int k = 82;
+    float alpha = 1.1;
+    float beta = 2;
+    int k = 80;
     // The strength of the connection in graph cuts is alpha/(1 +beta* grad2)
-    int slice = 40;
+    int slice = 1;
 
     if (argc >= 2) {
         k = atoi(argv[1]);
@@ -57,15 +57,11 @@ int main(int argc, char *argv[]) {
         cout << "beta :" << beta << endl;
     }
 
-    Image3D brainImage = Image3D::read_image("data/small_training", "training", ".jpg", k);
-    Image3D groundTruth = Image3D::read_image("data/small_training_groundtruth", "training_groundtruth", ".jpg", k);
-
-
-    //blurr the image
-//    float kernelData[]={.25,.5,.25};
-//    Image3D kernel = Image3D(3, 1, 1, kernelData);
-//    Image3D blurredBrainImage= ((brainImage.conv3D(kernel)).conv3D(Image3D(1,3,1,kernelData))).conv3D(Image3D(1,1,3,kernelData));
-
+    Image3D brainImage = Image3D::read_image("data/small_testing", "testing", ".jpg", k);
+    cout<<"brain image max "<<brainImage.max();
+    Image3D groundTruth = Image3D::read_image("data/small_testing_groundtruth", "testing_groundtruth", ".jpg", k);
+    cout<<"groundtruth image max "<<groundTruth.max();
+    Image3D confidence= Image3D::read_image("data/naive_confidence","confidence",".jpg",k);
 
     Image3D grad = brainImage.gradNorm2();
     grad.mul(1 / grad.max());
@@ -73,7 +69,7 @@ int main(int argc, char *argv[]) {
     imshow("brain image", brainImage.get_slice(slice));
     waitKey(0);
 
-    Image3D result = getGraphCut(brainImage, grad, brainImage, alpha, beta);
+    Image3D result = getGraphCut(brainImage, grad, confidence, alpha, beta);
 
     Mat resultSlice = result.get_slice(slice);
     Mat trueResult = groundTruth.get_slice(slice);
